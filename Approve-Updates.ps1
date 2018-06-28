@@ -55,8 +55,8 @@ function Approve-Updates {
     # Approve the updates
     foreach($Update in $Updates) {
 
-        #Approve-WsusUpdate -Update $Update -TargetGroupName $TargetGroup -Action Install -Verbose
-        $Message = 'Update Approved: ' + $Update.Update.Title + ' to Target Group ' + $TargetGroup
+        Approve-WsusUpdate -Update $Update -TargetGroupName $TargetGroup -Action Install -Verbose
+        $Message = 'Update Approved: ' + $Update.Update.Title + ' to Target Group: ' + $TargetGroup
         Write-Event -Level Information -EventID 10 -Source 'PSWindowsUpdate' -Message $Message
         Write-Verbose $Message
 
@@ -71,8 +71,8 @@ function Approve-Updates {
         # Approve the updates
         foreach($Update in $Updates) {
 
-            #Approve-WsusUpdate -Update $Update -TargetGroupName $TargetGroup -Action Install -Verbose
-            $Message = 'Update Approved: ' + $Update.Update.Title + ' to Target Group ' + $TargetGroup
+            Approve-WsusUpdate -Update $Update -TargetGroupName $TargetGroup -Action Install -Verbose
+            $Message = 'Update Approved: ' + $Update.Update.Title + ' to Target Group: ' + $TargetGroup
             Write-Event -Level Information -EventID 10 -Source 'PSWindowsUpdate' -Message $Message
             Write-Verbose $Message
 
