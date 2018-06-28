@@ -10,9 +10,9 @@ Install-Module WindowsUpdate should do it (with admin creds)
 
 param(
 
-    [parameter(Mandatory=$true)]
+    [parameter(Mandatory=$false)]
     [ValidateNotNullOrEmpty()]
-    [string]$TargetGroup
+    [string]$TargetGroup = 'Pilot Group'
 
 )
 
