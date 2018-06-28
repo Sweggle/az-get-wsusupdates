@@ -25,7 +25,7 @@ $LogPath = 'C:\WSUSLogs\'
 # Log Path Test
 if(!(Test-Path -Path $LogPath)) { mkdir $LogPath }
 # Set Log File Name
-$LogFileName = 'Approve-PilotUpdates-Logfile-' + (Get-Date -Format MM-yy) + '.log'
+$LogFileName = 'Approve-PilotUpdates-Logfile-' + (Get-Date -Format ddMMyy-HHmmss) + '.log'
 # Start Log Transcript
 $ErrorActionPreference = 'SilentlyContinue'
 Stop-Transcript | Out-Null
