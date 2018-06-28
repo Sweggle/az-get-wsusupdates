@@ -101,7 +101,7 @@ param (
     [string]$Log = "Application",
 
     [parameter(Mandatory=$false)]
-    [string]$Source = "ExcentaAutomatedPatching"
+    [string]$Source
 )
 
     if ([System.Diagnostics.EventLog]::SourceExists($source) -eq $false) {
@@ -111,13 +111,13 @@ param (
     Write-EventLog –LogName $log –Source $source –EntryType $level –EventID $eventID –Message $message
 }
 
-# Approve the updates
-Approve-Updates -Classification Critical -TargetGroup 'Pilot Group' -CheckForMissedApprovals -Verbose
+# Approve the Critical updates
+Approve-Updates -Classification Critical -TargetGroup $TargetGroup -CheckForMissedApprovals -Verbose
 
-# Approve the updates
-Approve-Updates -Classification Security -TargetGroup 'Pilot Group' -CheckForMissedApprovals -Verbose
+# Approve the Security updates
+Approve-Updates -Classification Security -TargetGroup $TargetGroup -CheckForMissedApprovals -Verbose
 
-# Approve the updates
-Approve-Updates -Classification WSUS -TargetGroup 'Pilot Group' -CheckForMissedApprovals -Verbose
+# Approve the WSUS updates
+Approve-Updates -Classification WSUS -TargetGroup $TargetGroup -CheckForMissedApprovals -Verbose
 
 Stop-Transcript | Out-Null
