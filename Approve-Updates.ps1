@@ -103,7 +103,7 @@ param (
     [string]$Log = "Application",
 
     [parameter(Mandatory=$false)]
-    [string]$Source = "ExcentaAutomatedPatching"
+    [string]$Source
 )
 
     if ([System.Diagnostics.EventLog]::SourceExists($source) -eq $false) {
