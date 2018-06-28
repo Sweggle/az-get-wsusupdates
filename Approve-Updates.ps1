@@ -23,14 +23,14 @@ $VerbosePreference = 'Continue'
 # Set Log Location
 $LogPath = 'C:\WSUSLogs\'
 # Log Path Test
-if(!(Test-Path -Path $LogPath)) { mkdir 'C:\WSUSLog' }
+if(!(Test-Path -Path $LogPath)) { mkdir $LogPath }
 # Set Log File Name
 $LogFileName = 'Approve-PilotUpdates-Logfile-' + (Get-Date -Format MM-yy) + '.log'
 # Start Log Transcript
 $ErrorActionPreference = 'SilentlyContinue'
 Stop-Transcript | Out-Null
 $ErrorActionPreference = 'Stop'
-Start-Transcript -Path $LogFileName -Force
+Start-Transcript -Path $($LogPath + $LogFileName) -Force
 
 function Approve-Updates {
     
@@ -49,8 +49,6 @@ function Approve-Updates {
 
     )
 
-    [array]$ApprovedUpdates = $null
-
     # Get the waiting updates for the classification
     $Updates = Get-WsusUpdate -Approval Unapproved -Status FailedOrNeeded -Classification $Classification
 
@@ -58,7 +56,9 @@ function Approve-Updates {
     foreach($Update in $Updates) {
 
         #Approve-WsusUpdate -Update $Update -TargetGroupName $TargetGroup -Action Install -Verbose
-        $ApprovedUpdates += $Update.UpdateId
+        $Message = 'Update Approved: ' + $Update.Update.Title + ' to Target Group ' + $TargetGroup
+        Write-Event -Level Information -EventID 10 -Source 'PSWindowsUpdate' -Message $Message
+        Write-Verbose $Message
 
     }
 
@@ -72,15 +72,13 @@ function Approve-Updates {
         foreach($Update in $Updates) {
 
             #Approve-WsusUpdate -Update $Update -TargetGroupName $TargetGroup -Action Install -Verbose
-            $ApprovedUpdates += $Update.UpdateId
+            $Message = 'Update Approved: ' + $Update.Update.Title + ' to Target Group ' + $TargetGroup
+            Write-Event -Level Information -EventID 10 -Source 'PSWindowsUpdate' -Message $Message
+            Write-Verbose $Message
 
         }
 
-    }
-    
-    $Message = 'The following types of updates have been approved: ' + $Classification
-    $Message += $ApprovedUpdates
-    Write-Event -Level Information -EventID 10 -Source 'PSWindowsUpdate' -Message $Message       
+    }   
     
 } 
 
@@ -103,7 +101,7 @@ param (
     [string]$Log = "Application",
 
     [parameter(Mandatory=$false)]
-    [string]$Source
+    [string]$Source = "ExcentaAutomatedPatching"
 )
 
     if ([System.Diagnostics.EventLog]::SourceExists($source) -eq $false) {
@@ -114,12 +112,12 @@ param (
 }
 
 # Approve the updates
-Approve-Updates -Classification Critical -TargetGroup 'Pilot Group' -CheckForMissedApprovals
+Approve-Updates -Classification Critical -TargetGroup 'Pilot Group' -CheckForMissedApprovals -Verbose
 
 # Approve the updates
-Approve-Updates -Classification Security -TargetGroup 'Pilot Group' -CheckForMissedApprovals
+Approve-Updates -Classification Security -TargetGroup 'Pilot Group' -CheckForMissedApprovals -Verbose
 
 # Approve the updates
-Approve-Updates -Classification WSUS -TargetGroup 'Pilot Group' -CheckForMissedApprovals
+Approve-Updates -Classification WSUS -TargetGroup 'Pilot Group' -CheckForMissedApprovals -Verbose
 
 Stop-Transcript | Out-Null
